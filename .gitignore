@@ -1,0 +1,6 @@
+.idea
+objs
+logs
+Makefile
+.conda
+html
