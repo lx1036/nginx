@@ -291,4 +291,17 @@ ngx_feature_test="socklen_t optlen = sizeof(int);
 . auto/feature
 
 
+# IPV6_TRANSPARENT
+
+ngx_feature="IPV6_TRANSPARENT"
+ngx_feature_name="NGX_HAVE_IPV6_TRANSPARENT"
+ngx_feature_run=no
+ngx_feature_incs="#include <linux/in6.h>"
+ngx_feature_path=
+ngx_feature_libs=
+ngx_feature_test="int optname = IPV6_TRANSPARENT;
+                  (void) optname"
+. auto/feature
+
+
 CC_AUX_FLAGS="$cc_aux_flags -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64"

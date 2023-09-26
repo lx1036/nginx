@@ -563,6 +563,38 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
             }
 #endif
 
+#if (NGX_HAVE_TRANSPARENT_PROXY && NGX_LINUX)
+            /* Don't need to set on FreeBSD or OSX */
+            if (ls[i].transparent && !ngx_test_config) {
+                int transparent = 1;
+                switch (ls[i].sockaddr->sa_family) {
+                case AF_INET:
+                    if (setsockopt(s, IPPROTO_IP, IP_TRANSPARENT, (const void *) &transparent, sizeof(int)) == -1) {
+                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno, "setsockopt(IP_TRANSPARENT) %V failed", &ls[i].addr_text);
+                        return NGX_ERROR;
+                    }
+
+                    break;
+
+#if (NGX_HAVE_INET6)
+                case AF_INET6:
+#if NGX_HAVE_IPV6_TRANSPARENT
+                    if (setsockopt(s, IPPROTO_IPV6, IPV6_TRANSPARENT, (const void *) &transparent, sizeof(int)) == -1)
+#endif
+                    {
+                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno, "setsockopt(IPV6_TRANSPARENT) %V failed", &ls[i].addr_text);
+                        return NGX_ERROR;
+                    }
+
+                    break;
+
+#endif /* NGX_HAVE_INET6 */
+
+                }
+            }
+#endif /* NGX_HAVE_TRANSPARENT_PROXY */
+
+
 #if (NGX_HAVE_INET6 && defined IPV6_V6ONLY)
 
             if (ls[i].sockaddr->sa_family == AF_INET6) {

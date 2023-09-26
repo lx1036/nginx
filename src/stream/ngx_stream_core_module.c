@@ -738,6 +738,16 @@ ngx_stream_core_listen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
             continue;
         }
 
+        if (ngx_strcmp(value[i].data, "transparent") == 0) {
+#if (NGX_HAVE_TRANSPARENT_PROXY)
+            ls->transparent = 1;
+            continue;
+#else
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "transparent is not supported on this platform");
+            return NGX_CONF_ERROR;
+#endif
+        }
+
         if (ngx_strcmp(value[i].data, "ssl") == 0) {
 #if (NGX_STREAM_SSL)
             ngx_stream_ssl_conf_t  *sslcf;

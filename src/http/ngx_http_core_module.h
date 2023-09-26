@@ -81,6 +81,11 @@ typedef struct {
 #endif
     unsigned                   deferred_accept:1;
     unsigned                   reuseport:1;
+
+#if (NGX_HAVE_TRANSPARENT_PROXY)
+    unsigned                   transparent:1;
+#endif
+
     unsigned                   so_keepalive:2;
     unsigned                   proxy_protocol:1;
 

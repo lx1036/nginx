@@ -4047,6 +4047,17 @@ ngx_http_core_listen(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
 #endif
 
+        if (ngx_strcmp(value[n].data, "transparent") == 0) {
+#if (NGX_HAVE_TRANSPARENT_PROXY)
+            lsopt.transparent = 1;
+            continue;
+#else
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, "transparent is not supported on this platform");
+            return NGX_CONF_ERROR;
+#endif
+        }
+
+
         if (ngx_strncmp(value[n].data, "backlog=", 8) == 0) {
             lsopt.backlog = ngx_atoi(value[n].data + 8, value[n].len - 8);
             lsopt.set = 1;

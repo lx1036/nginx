@@ -55,6 +55,9 @@ typedef struct {
     unsigned                       ipv6only:1;
 #endif
     unsigned                       reuseport:1;
+#if (NGX_HAVE_TRANSPARENT_PROXY)
+    unsigned                       transparent:1;
+#endif    
     unsigned                       so_keepalive:2;
     unsigned                       proxy_protocol:1;
 #if (NGX_HAVE_KEEPALIVE_TUNABLE)

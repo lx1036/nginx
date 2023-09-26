@@ -224,7 +224,11 @@ ngx_http_init_connection(ngx_connection_t *c)
 
     port = c->listening->servers;
 
-    if (port->naddrs > 1) {
+    if (port->naddrs > 1
+    #if (NGX_HAVE_TRANSPARENT_PROXY)
+        || c->listening->transparent
+    #endif
+    ) {
 
         /*
          * there are several addresses on this port and one of them
